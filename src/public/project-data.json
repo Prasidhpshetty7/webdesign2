@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "title": "PROJECT TITLE 1 — FULL-STACK WEB APPLICATION",
+    "role": "Full-Stack Development / <br /> UI/UX Design",
+    "description": "A modern web application built with React, Node.js, and MongoDB featuring responsive design and real-time functionality.",
+    "link": "#"
+  },
+  {
+    "id": 2,
+    "title": "PROJECT TITLE 2 — E-COMMERCE PLATFORM",
+    "role": "Frontend Development / <br /> Backend Architecture",
+    "description": "Scalable e-commerce solution with payment integration, inventory management, and admin dashboard.",
+    "link": "#"
+  },
+  {
+    "id": 3,
+    "title": "PROJECT TITLE 3 — MOBILE-FIRST WEB APP",
+    "role": "Web Design / <br /> Frontend Development",
+    "description": "Progressive web application optimized for mobile devices with offline functionality and push notifications.",
+    "link": "#"
+  },
+  {
+    "id": 4,
+    "title": "PROJECT TITLE 4 — API DEVELOPMENT",
+    "role": "Backend Development / <br /> Database Design",
+    "description": "RESTful API built with Node.js and Express, featuring authentication, data validation, and comprehensive documentation.",
+    "link": "#"
+  },
+  {
+    "id": 5,
+    "title": "PROJECT TITLE 5 — CLOUD DEPLOYMENT",
+    "role": "DevOps / <br /> Cloud Architecture",
+    "description": "Containerized application deployment using Docker and AWS with CI/CD pipeline implementation.",
+    "link": "#"
+  },
+  {
+    "id": 6,
+    "title": "PROJECT TITLE 6 — REACT DASHBOARD",
+    "role": "Frontend Development / <br /> Data Visualization",
+    "description": "Interactive dashboard built with React and D3.js for real-time data visualization and analytics.",
+    "link": "#"
+  },
+  {
+    "id": 7,
+    "title": "PROJECT TITLE 7 — PORTFOLIO WEBSITE",
+    "role": "Web Design / <br /> Frontend Development",
+    "description": "Modern portfolio website with smooth animations, responsive design, and optimized performance.",
+    "link": "#"
+  }
+]
