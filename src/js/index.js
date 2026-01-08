@@ -28,16 +28,31 @@ class SmoothScroll {
       scrollable: document.querySelector("[data-scroll-container]"),
     };
     
+    this.rAF = null;
+    this.lastHeight = 0;
     this.init();
   }
   
   bindMethods() {
     this.run = this.run.bind(this);
     this.resize = this.resize.bind(this);
+    this.checkHeight = this.checkHeight.bind(this);
   }
   
   setHeight() {
-    document.body.style.height = `${this.dom.scrollable.getBoundingClientRect().height}px`;
+    // Get actual scrollable height
+    const height = this.dom.scrollable.getBoundingClientRect().height;
+    // Only update if height changed significantly (more than 10px)
+    if (Math.abs(height - this.lastHeight) > 10) {
+      this.lastHeight = height;
+      document.body.style.height = `${height}px`;
+      ScrollTrigger.refresh();
+    }
+  }
+  
+  checkHeight() {
+    // Continuously check height for dynamic content
+    this.setHeight();
   }
   
   resize() {
@@ -49,26 +64,65 @@ class SmoothScroll {
     this.data.current += (this.data.target - this.data.current) * this.data.ease;
     this.data.current = Math.round(this.data.current * 100) / 100;
     
+    // Clamp current to prevent over-scrolling
+    const maxScroll = Math.max(0, this.lastHeight - window.innerHeight);
+    this.data.current = Math.max(0, Math.min(this.data.current, maxScroll));
+    
     this.dom.scrollable.style.transform = `translate3d(0, ${-this.data.current}px, 0)`;
     
-    ScrollTrigger.update();
-    requestAnimationFrame(this.run);
+    this.rAF = requestAnimationFrame(this.run);
   }
   
   init() {
-    this.setHeight();
     this.dom.scrollable.style.position = "fixed";
     this.dom.scrollable.style.top = "0";
     this.dom.scrollable.style.left = "0";
     this.dom.scrollable.style.width = "100%";
+    this.dom.scrollable.style.willChange = "transform";
+    
+    // Initial height calculation
+    this.setHeight();
+    
+    // Set height after images and fonts load
+    window.addEventListener("load", () => {
+      this.setHeight();
+      // Recalculate multiple times to catch late-loading content
+      setTimeout(() => this.setHeight(), 100);
+      setTimeout(() => this.setHeight(), 500);
+      setTimeout(() => this.setHeight(), 1000);
+      setTimeout(() => this.setHeight(), 2000);
+    });
+    
+    // Use ResizeObserver to detect content size changes
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        this.setHeight();
+      });
+      resizeObserver.observe(this.dom.scrollable);
+    }
+    
+    // Also check periodically for the first few seconds
+    let checkCount = 0;
+    const heightChecker = setInterval(() => {
+      this.checkHeight();
+      checkCount++;
+      if (checkCount > 10) clearInterval(heightChecker);
+    }, 500);
     
     window.addEventListener("resize", this.resize);
-    requestAnimationFrame(this.run);
+    this.run();
   }
 }
 
-// Initialize smooth scroll
-new SmoothScroll();
+// Initialize smooth scroll after DOM is ready
+let smoothScrollInstance = null;
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    smoothScrollInstance = new SmoothScroll();
+  });
+} else {
+  smoothScrollInstance = new SmoothScroll();
+}
 
 export default class Home {
   constructor() {
@@ -228,31 +282,29 @@ export default class Home {
   heroTextAnimation() {
     const scrollTriggerConfig = {
       trigger: ".hero__title",
-      scrub: 1.5,
+      scrub: 0.5, // Lower scrub for tighter sync
       start: "top top",
       end: "bottom top",
     };
 
-    // FULL moves left on scroll
-    gsap.to(".hero__title__left", {
+    // Create a timeline for perfectly synced animations
+    const heroTl = gsap.timeline({
       scrollTrigger: scrollTriggerConfig,
+    });
+
+    // All animations happen together in the timeline
+    heroTl.to(".hero__title__left", {
       x: -150,
       ease: "none",
-    });
-
-    // Dash expands on scroll (synced with text movement)
-    gsap.to(".hero__title__dash.desktop", {
-      scrollTrigger: scrollTriggerConfig,
+    }, 0)
+    .to(".hero__title__dash.desktop", {
       scaleX: 3,
       ease: "none",
-    });
-
-    // STACK moves right on scroll
-    gsap.to(".hero__title__right", {
-      scrollTrigger: scrollTriggerConfig,
+    }, 0)
+    .to(".hero__title__right", {
       x: 150,
       ease: "none",
-    });
+    }, 0);
   }
 }
 
