@@ -1,3 +1,19 @@
+# Webdesign2
+
+## Overview
+Webdesign2 is a frontend project that focuses on structured styling using SCSS. It demonstrates better organization of styles and layout consistency across the UI.
+
+## Tech Stack
+- HTML
+- SCSS (Sass)
+- JavaScript
+
+## Development Style
+Developed using **vibe coding**, allowing rapid experimentation with styles while keeping the UI clean and readable.
+
+## How to Run
+Open the `index.html` file in your browser to view the design.
+
 ### To kickstart the boilerplate, run the following commands:
 
 ```bash
